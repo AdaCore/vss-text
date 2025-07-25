@@ -1,3 +1,0 @@
-START_DOCUMENT
-INVALID NOT_VALID "unescaped control character"
-END_DOCUMENT

@@ -53,11 +53,6 @@ build-all-libs: \
 build-libs-%:
 	gprbuild $(GPRBUILD_FLAGS) gnat/vss_gnat.gpr
 	gprbuild $(GPRBUILD_FLAGS) gnat/vss_text.gpr
-	gprbuild $(GPRBUILD_FLAGS) gnat/vss_json.gpr
-	gprbuild $(GPRBUILD_FLAGS) gnat/vss_regexp.gpr
-	gprbuild $(GPRBUILD_FLAGS) gnat/vss_xml.gpr
-	gprbuild $(GPRBUILD_FLAGS) gnat/vss_xml_templates.gpr
-	gprbuild -XXMLADA_BUILD=$(word 2, $(subst _, ,$*)) $(GPRBUILD_FLAGS) gnat/vss_xml_xmlada.gpr
 
 install: install-libs-development_relocatable
 
@@ -66,19 +61,6 @@ install-all-libs: install-libs-release_static install-libs-release_static-pic in
 install-libs-%:
 	gprinstall $(GPRINSTALL_FLAGS)/gnat -f -p -P gnat/vss_gnat.gpr --install-name=vss_gnat
 	gprinstall $(GPRINSTALL_FLAGS)/text -f -p -P gnat/vss_text.gpr --install-name=vss_text
-	gprinstall $(GPRINSTALL_FLAGS)/json -f -p -P gnat/vss_json.gpr --install-name=vss_json
-	gprinstall $(GPRINSTALL_FLAGS)/regexp -f -p -P gnat/vss_regexp.gpr --install-name=vss_regexp
-	gprinstall $(GPRINSTALL_FLAGS)/xml -f -p -P gnat/vss_xml.gpr --install-name=vss_xml
-	gprinstall $(GPRINSTALL_FLAGS)/xml_templates -f -p -P gnat/vss_xml_templates.gpr --install-name=vss_xml_templates
-	gprinstall -XXMLADA_BUILD=$(word 2, $(subst _, ,$*)) $(GPRINSTALL_FLAGS)/xml_xmlada -f -p -P gnat/vss_xml_xmlada.gpr --install-name=vss_xml_xmlada
-
-misc: misc-validation_static
-
-misc-%: # Check compilation of other projects
-	gprbuild $(GPRBUILD_FLAGS) -aPgnat gnat/tools/json_schema.gpr
-	gprbuild $(GPRBUILD_FLAGS) -aPgnat examples/regexp/grep.gpr
-	gprbuild $(GPRBUILD_FLAGS) -aPgnat examples/blogs/json_1/blog_1.gpr
-	gprbuild $(GPRBUILD_FLAGS) -aPgnat examples/command_line/command/command_line_command.gpr
 
 generate: generate-development_static
 
@@ -92,16 +74,12 @@ build-tests: build-tests-validation_static build-performance-release_static
 
 build-tests-%:
 	gprbuild $(GPRBUILD_FLAGS) gnat/tests/vss_text_tests.gpr
-	gprbuild $(GPRBUILD_FLAGS) gnat/tests/vss_os_tests.gpr
-	gprbuild $(GPRBUILD_FLAGS) gnat/tests/vss_json_tests.gpr
 	gprbuild $(GPRBUILD_FLAGS) gnat/tests/vss_stream_tests.gpr
-	gprbuild $(GPRBUILD_FLAGS) gnat/tests/vss_regexp_tests.gpr
-	gprbuild $(GPRBUILD_FLAGS) gnat/tests/vss_html_tests.gpr
 
 build-performance-%:
 	gprbuild $(GPRBUILD_FLAGS) gnat/tests/vss_text_performance.gpr
 
-check: build-tests check_text check_json check_regexp check_html
+check: build-tests check_text
 
 check_text:
 	.objs/validation/tests/test_characters data/ucd
@@ -112,7 +90,6 @@ check_text:
 	.objs/validation/tests/test_line_iterators
 	.objs/validation/tests/test_stream_element_vector
 	.objs/validation/tests/test_text_streams
-	.objs/validation/tests/test_file_text_streams testsuite/stream/test_file_text_stream/vss.197.in.txt /tmp/vss.197.out.txt && diff -u --strip-trailing-cr /tmp/vss.197.out.txt testsuite/stream/test_file_text_stream/vss.197.out.txt
 	.objs/validation/tests/test_string_append
 	.objs/validation/tests/test_string_compare
 	.objs/validation/tests/test_string_conversions
@@ -126,14 +103,6 @@ check_text:
 	.objs/validation/tests/test_string_vector
 	.objs/validation/tests/test_transformer data/ucd testsuite/text/w3c-i18n-tests-casing/*.txt
 	.objs/validation/tests/test_word_iterators data/ucd
-	.objs/validation/tests/test_standard_paths
-ifeq ($(OS),Windows_NT)
-	cmd.exe \/c "testsuite\\run_test_application_arguments.bat"
-else
-	.objs/validation/tests/test_application_arguments hello привет გამარჯობა 👋
-endif
-	VSS_ENV1="A$(VSS_PS)B$(VSS_PS)C" .objs/validation/tests/test_environment
-	.objs/validation/tests/test_command_line_parser
 	.objs/validation/tests/test_string_decoder iso-8859-1 false testsuite/text/converters/all_bytes.bin testsuite/text/converters/iso88591-utf8.txt
 	.objs/validation/tests/test_string_decoder iso-8859-2 false testsuite/text/converters/all_bytes.bin testsuite/text/converters/iso88592-utf8.txt
 	.objs/validation/tests/test_string_decoder iso-8859-5 false testsuite/text/converters/all_bytes.bin testsuite/text/converters/iso88595-utf8.txt
@@ -147,41 +116,8 @@ endif
 	.objs/validation/tests/test_string_decoder shift-jis false testsuite/text/converters/sjis_chars.sjis testsuite/text/converters/sjis_chars-utf8.txt
 	.objs/release/tests/test_string_performance
 
-check_json:
-	.objs/validation/tests/test_json_content_handler
-	.objs/validation/tests/test_json_buffered_pull_reader
-	.objs/validation/tests/test_json_decimal_to_number /dev/null data/parse-number-fxx-test-data/data/*.txt
-	rm -f .objs/validation/tests/.fails
-	for f in `find data/json5-tests -name '*.json'` \
-	         `find data/json5-tests -name '*.json5'` \
-	         `find data/json5-tests -name '*.js'` \
-	         `find data/json5-tests -name '*.txt'` \
-		 testsuite/json/JSONTestSuite/test_parsing/*.json \
-		 testsuite/json/JSON_checker/test/*.json \
-		 testsuite/json/AdaCore/test/*.json; \
-		do echo -n "`basename $$f` (JSON): "; \
-		testsuite/run_json_reader_test $$f || touch .objs/validation/tests/.fails; \
-		echo -n "`basename $$f` (JSON5): "; \
-		testsuite/run_json_reader_test $$f --json5 || touch .objs/validation/tests/.fails; \
-	done
-	test ! -e .objs/validation/tests/.fails
-	.objs/validation/tests/test_json_writer testsuite/json/test_json_writer.expected
-
-check_regexp:
-	.objs/validation/tests/test_regexp
-	.objs/validation/tests/test_regexp_re_tests $(OK_RE_TESTS) < data/re_tests
-
-check_html:
-	rm -f .objs/validation/tests/.fails
-	for f in testsuite/html/test_data/*.xhtml; do \
-	  echo -n "$$f: "; if .objs/validation/tests/test_html_writer $$f 1>.objs/out 2>.objs/err; (cat .objs/out; sed 's/.*[\/\\]\(.*:\)/\1/' .objs/err) | diff --strip-trailing-cr -u -- $${f%xhtml}out - ; then echo "PASS"; else echo "FAIL"; touch .objs/validation/tests/.fails; fi ; \
-	done
-	test ! -e .objs/validation/tests/.fails
-
 check_install:
 	echo 'with "vss_text.gpr";'                          >  example.gpr
-	echo 'with "vss_json.gpr";'                          >> example.gpr
-	echo 'with "vss_regexp.gpr";'                        >> example.gpr
 	echo 'project Example is'                            >> example.gpr
 	echo '   for Main use ("example.adb");'              >> example.gpr
 	echo '   package Compiler is'                        >> example.gpr
@@ -189,8 +125,6 @@ check_install:
 	echo '   end Compiler;'                              >> example.gpr
 	echo 'end Example;'                                  >> example.gpr
 	echo 'with VSS.Strings;'                             >  example.adb
-	echo 'with VSS.JSON;'                                >> example.adb
-	echo 'with VSS.Regular_Expressions;'                 >> example.adb
 	echo 'procedure Example is'                          >> example.adb
 	echo 'begin null; end;'                              >> example.adb
 	gprbuild -aP $(INSTALL_PROJECT_DIR) -P example.gpr
