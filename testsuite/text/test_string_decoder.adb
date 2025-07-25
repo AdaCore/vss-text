@@ -1,12 +1,12 @@
 --
---  Copyright (C) 2022-2023, AdaCore
+--  Copyright (C) 2022-2025, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
 
+with Ada.Command_Line;
 with Ada.Streams.Stream_IO;
 
-with VSS.Application;
 with VSS.Stream_Element_Vectors.Conversions;
 with VSS.Strings.Converters.Decoders;
 with VSS.Strings.Conversions;
@@ -141,17 +141,20 @@ procedure Test_String_Decoder is
 begin
    declare
       Encoding  : constant VSS.Strings.Virtual_String :=
-        VSS.Application.Arguments.Element (1);
+        VSS.Strings.Conversions.To_Virtual_String
+          (Ada.Command_Line.Argument (1));
       Has_Error : constant Boolean :=
-        Boolean'Wide_Wide_Value
-          (VSS.Strings.Conversions.To_Wide_Wide_String
-             (VSS.Application.Arguments.Element (2)));
+        Boolean'Value (Ada.Command_Line.Argument (2));
       Encoded   : constant VSS.Stream_Element_Vectors.Stream_Element_Vector :=
-        Load (VSS.Application.Arguments.Element (3));
+        Load
+          (VSS.Strings.Conversions.To_Virtual_String
+            (Ada.Command_Line.Argument (3)));
       Decoded   : constant VSS.Strings.Virtual_String :=
         VSS.Strings.Conversions.To_Virtual_String
           (VSS.Stream_Element_Vectors.Conversions.Unchecked_To_String
-             (Load (VSS.Application.Arguments.Element (4))));
+             (Load
+                (VSS.Strings.Conversions.To_Virtual_String
+                   (Ada.Command_Line.Argument (4)))));
 
    begin
       Test_Support.Assert (not Encoding.Is_Empty);
