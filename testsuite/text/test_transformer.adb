@@ -8,16 +8,17 @@
 --    1) Path to UCD database
 --    2..*) Paths to W3C I18N test files
 
-with VSS.Application;
+with Ada.Command_Line;
+
 with VSS.Strings.Conversions;
 
 with Test_Support;
 
 procedure Test_Transformer is
 
-   UCD_Root      : constant Wide_Wide_String :=
-     VSS.Strings.Conversions.To_Wide_Wide_String
-       (VSS.Application.Arguments.Element (1));
+   UCD_Root      : constant VSS.Strings.Virtual_String :=
+     VSS.Strings.Conversions.To_Virtual_String
+       (Ada.Command_Line.Argument (1));
 
    W3C_I18N_File : VSS.Strings.Virtual_String;
    --  Path to test data file. Used by Test_Casing_W3C_I18N subprogram.
@@ -43,8 +44,10 @@ procedure Test_Transformer is
         (Test_Casing_Minimal'Access,
          "Minimal case conversions");
 
-      for J in 2 .. VSS.Application.Arguments.Length loop
-         W3C_I18N_File := VSS.Application.Arguments.Element (J);
+      for J in 2 .. Ada.Command_Line.Argument_Count loop
+         W3C_I18N_File :=
+           VSS.Strings.Conversions.To_Virtual_String
+             (Ada.Command_Line.Argument (J));
 
          Test_Support.Run_Testcase
            (Test_Casing_W3C_I18N'Access,

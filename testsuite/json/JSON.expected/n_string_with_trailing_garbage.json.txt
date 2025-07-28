@@ -1,4 +1,0 @@
-START_DOCUMENT
-STRING_VALUE ""
-INVALID NOT_VALID "end of document expected"
-END_DOCUMENT

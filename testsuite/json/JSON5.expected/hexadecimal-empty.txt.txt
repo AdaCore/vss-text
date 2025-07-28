@@ -1,3 +1,0 @@
-START_DOCUMENT
-INVALID NOT_VALID "hexadecimal digit expected"
-END_DOCUMENT

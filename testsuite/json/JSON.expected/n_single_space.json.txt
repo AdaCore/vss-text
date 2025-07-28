@@ -1,3 +1,0 @@
-START_DOCUMENT
-INVALID NOT_VALID "premature end of value"
-END_DOCUMENT

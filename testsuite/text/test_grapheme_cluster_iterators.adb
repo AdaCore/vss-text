@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2021-2024, AdaCore
+--  Copyright (C) 2021-2025, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -7,8 +7,8 @@
 with Ada.Command_Line;
 with GNAT.Source_Info;
 
-with VSS.Application;
 with VSS.String_Vectors;
+with VSS.Strings.Conversions;
 with VSS.Strings.Grapheme_Cluster_Iterators;
 
 with Test_Support;
@@ -43,7 +43,8 @@ procedure Test_Grapheme_Cluster_Iterators is
    --  Test cell width computation.
 
    Emoji_Root : constant VSS.Strings.Virtual_String :=
-     VSS.Application.Arguments.Element (2);
+     VSS.Strings.Conversions.To_Virtual_String
+       (Ada.Command_Line.Argument (2));
 
    -----------------------------------------
    -- Grapheme_Cluster_Iterator_Testsuite --

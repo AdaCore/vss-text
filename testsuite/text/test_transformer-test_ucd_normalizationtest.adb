@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2021-2024, AdaCore
+--  Copyright (C) 2021-2025, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -40,7 +40,9 @@ procedure Test_UCD_NormalizationTest is
    Loader : UCD.Data_File_Loaders.File_Loader;
 
 begin
-   Loader.Open (UCD_Root, "NormalizationTest.txt");
+   Loader.Open
+     (VSS.Strings.Conversions.To_Wide_Wide_String (UCD_Root),
+      "NormalizationTest.txt");
 
    while not Loader.End_Of_File loop
       declare

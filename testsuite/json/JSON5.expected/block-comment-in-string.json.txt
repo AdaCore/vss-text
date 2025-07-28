@@ -1,3 +1,0 @@
-START_DOCUMENT
-STRING_VALUE "This /* block comment */ isn't really a block comment."
-END_DOCUMENT
