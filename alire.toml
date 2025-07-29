@@ -1,15 +1,15 @@
 name = "vss"
 description = "Advanced string and text manipulation with Unicode support"
 version = "25.0.0-dev"
-tags = ["unicode", "json", "text"]
+tags = ["unicode", "text"]
 
 authors = ["AdaCore"]
 maintainers = ["Vadim Godunko <vgodunko@gmail.com>", "Maxim Reznik <reznikmm@gmail.com>"]
 maintainers-logins = ["godunko", "reznikmm"]
 licenses = "Apache-2.0"
-website = "https://github.com/AdaCore/VSS"
+website = "https://github.com/AdaCore/vss-text"
 
-project-files = ["gnat/vss_text.gpr", "gnat/vss_json.gpr"]
+project-files = ["gnat/vss_text.gpr"]
 
 [configuration]
 generate_ada = false
