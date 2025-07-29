@@ -19,6 +19,8 @@ include:
     inputs:
       job-name: build:edge
       anod-args: run build_edge --latest
+      linux: true
+      windows: true
       save-component: true
 
 # Testing (stable & edge)
@@ -36,7 +38,10 @@ include:
     inputs:
       job-name: test:edge
       needs: ["build:edge:linux"]
+      windows-needs: ["build:edge:windows"]
       cpus: 2
+      linux: true
+      windows: true
       # --latest should not be used here because it causes Anod to re-download
       # components from Cathod instead of using the ones built in this pipeline
       # by the build job.
