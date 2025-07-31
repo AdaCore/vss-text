@@ -114,6 +114,7 @@ check_text:
 	.objs/validation/tests/test_string_decoder koi8-r false testsuite/text/converters/all_bytes.bin testsuite/text/converters/koi8r-utf8.txt
 	.objs/validation/tests/test_string_decoder EUC-JP false testsuite/text/converters/eucjp_chars.eucjp testsuite/text/converters/eucjp_chars-utf8.txt
 	.objs/validation/tests/test_string_decoder shift-jis false testsuite/text/converters/sjis_chars.sjis testsuite/text/converters/sjis_chars-utf8.txt
+	.objs/validation/tests/test_decimal_to_number /dev/null data/parse-number-fxx-test-data/data/*.txt
 	.objs/release/tests/test_string_performance
 
 check_install:
