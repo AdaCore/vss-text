@@ -1,4 +1,4 @@
-name = "vss-text"
+name = "vss_text"
 description = "Advanced string and text manipulation with Unicode support"
 version = "25.0.0-dev"
 tags = ["unicode", "string", "text"]
