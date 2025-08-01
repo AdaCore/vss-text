@@ -1,10 +1,10 @@
-# VSS
+# VSS-Text
 
-[![Build](https://github.com/AdaCore/VSS/actions/workflows/main.yml/badge.svg)](https://github.com/AdaCore/VSS/actions/workflows/main.yml)
-[![codecov](https://codecov.io/gh/AdaCore/VSS/branch/master/graph/badge.svg)](https://codecov.io/gh/AdaCore/VSS)
-[![alire](https://img.shields.io/endpoint?url=https://alire.ada.dev/badges/vss.json)](https://alire.ada.dev/crates/vss.html)
+[![Build](https://github.com/AdaCore/vss-text/actions/workflows/main.yml/badge.svg)](https://github.com/AdaCore/vss-text/actions/workflows/main.yml)
+[![codecov](https://codecov.io/gh/AdaCore/vss-text/branch/master/graph/badge.svg)](https://codecov.io/gh/AdaCore/vss-text)
+[![alire](https://img.shields.io/endpoint?url=https://alire.ada.dev/badges/vss-text.json)](https://alire.ada.dev/crates/vss-text.html)
 
-A high level string and text processing library.
+A high level Unicode text processing library.
 
 ## The objectives
 
@@ -25,8 +25,7 @@ The objectives of this project are
 * To prefer safe results over raising exceptions where possible.
 
 Warning: This is experimental work in progress, everything is subject to
-change. It may be or may be not part of GNATCOLL or standard Ada library
-in the future.
+change.
 
 Note: Some Ada 2022 features are used in source code. This requires compiler
 that supports them.
@@ -41,15 +40,11 @@ Prefered way to install is to download sources and run
 ### Using `alire`
 Or you can use [alire](https://alire.ada.dev/) library manager:
 
-    alr get --build vss
+    alr get --build vss_text
 
 Then you can use it as dependency in the project file:
 
     with "vss_text.gpr";
-
-For use JSON streaming API:
-
-    with "vss_json.gpr";
 
 ## Documentation
 
@@ -63,7 +58,7 @@ For use JSON streaming API:
 ## Contribute
 
 Feel free to dive in!
-[Open an issue](https://github.com/AdaCore/VSS/issues/new)
+[Open an issue](https://github.com/AdaCore/vss-text/issues/new)
 or submit PRs.
 
 ## License

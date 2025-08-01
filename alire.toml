@@ -1,7 +1,7 @@
-name = "vss"
+name = "vss_text"
 description = "Advanced string and text manipulation with Unicode support"
 version = "25.0.0-dev"
-tags = ["unicode", "text"]
+tags = ["unicode", "string", "text"]
 
 authors = ["AdaCore"]
 maintainers = ["Vadim Godunko <vgodunko@gmail.com>", "Maxim Reznik <reznikmm@gmail.com>"]

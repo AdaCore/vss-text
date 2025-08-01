@@ -6,6 +6,7 @@
 
 --  VSS: Text processing subproject
 
+with "../config/vss_config";
 with "vss_common";
 with "vss_gnat";
 
@@ -31,6 +32,8 @@ library project VSS_Text is
       for Switches ("Ada") use VSS_Common.Ada_Compiler_Switches;
 
       --  XXX GNAT 20240411 workaround
+      for Switches ("vss-implementation-numbers-tables.ads")
+        use VSS_Common.Ada_Compiler_Switches & ("-gnaty-t");
       for Switches ("vss-implementation-ucd_normalization_common.ads")
         use VSS_Common.Ada_Compiler_Switches & ("-gnaty-t");
       for Switches ("vss-strings-converters-decoders.adb")
@@ -41,5 +44,10 @@ library project VSS_Text is
    end Compiler;
 
    package Linker renames VSS_Common.Linker;
+
+   package Naming is
+      for Implementation ("VSS.Implementation.Arithmetic_64")
+        use "vss-implementation-arithmetic_64__" & Vss_Config.Max_Supported_Integer_Size & ".adb";
+   end Naming;
 
 end VSS_Text;
