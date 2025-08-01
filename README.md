@@ -40,7 +40,7 @@ Prefered way to install is to download sources and run
 ### Using `alire`
 Or you can use [alire](https://alire.ada.dev/) library manager:
 
-    alr get --build vss-text
+    alr get --build vss_text
 
 Then you can use it as dependency in the project file:
 
