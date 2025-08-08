@@ -5,16 +5,36 @@
 
 A high level Unicode text processing library.
 
+## Warning - Work in Progress
+
+This project is based on [`VSS`](https://github.com/AdaCore/VSS) (Virtual
+String System). VSS has been split into two projects:
+
+* [`vss-text`](https://github.com/AdaCore/vss-text) (this project): a library for Unicode text
+  processing.
+* [`vss-extra`](https://github.com/AdaCore/vss-extra): libraries for handling
+  JSON, Regexp, XML and other features based on `vss-text`.
+
+Significant changes are planned in `vss-text` with the goal to make it a
+high-quality, high-performance library suitable for a wide range of
+applications.
+
+The changes include the following (non-exhaustive list):
+
+* API Changes
+  * Introduce an immutable string type.
+  * Repurpose the mutable `Virtual_String` type to a string builder type.
+  * Possibly rename the root package `VSS` to a new more appropriate name. GPR project and repository names might change accordingly.
+* (done) Drop the support of multiple internal encodings in favor of a single internal
+  encoding (likely UTF-8) for improved performance.
+
 ## The objectives
 
 The objectives of this project are
 
 * To introduce a definite type that represents a string of Unicode characters
   and provides a handy set of operations.
-* The API should be encoding independent and allows efficient implementations
-  depending on platform/application and avoid extra encoding conversions, e.g.
-  an UTF-8 internal representation for Gtk+ applications, UCS-2 for native
-  Windows applications and UTF-16 for WebAssembly.
+* The API should be encoding independent and allows efficient implementations.
 * Besides separating string API from in-memory data representation, it should
   separate string API from input/output stream representation.
 * To provide a clear, well-defined semantic for iteration over string
@@ -32,12 +52,14 @@ that supports them.
 ## Install
 
 ### Build from sources
+
 Prefered way to install is to download sources and run
 
     make all install PREFIX=/path/to/install
 
-### Using `alire`
-Or you can use [alire](https://alire.ada.dev/) library manager:
+### Using `Alire`
+
+Or you can use [Alire](https://alire.ada.dev/) library manager:
 
     alr get --build vss_text
 
