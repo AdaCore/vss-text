@@ -108,7 +108,17 @@ package body VSS.Implementation.UTF8_Strings is
       Success       : Boolean with Unreferenced;
 
    begin
-      if From.Index > To.Index then
+      if Text.Size = 0 then
+         --  An empty string, all components of `Size` are zeros.
+
+         pragma Assert (From.UTF8_Offset = -1);
+         pragma Assert (To.UTF8_Offset = -1);
+         --  The only possible position of the cursors is before the first
+         --  charater.
+
+         Size := (0, 0, 0);
+
+      elsif From.Index > To.Index then
          Size := (0, 0, 0);
 
       else
