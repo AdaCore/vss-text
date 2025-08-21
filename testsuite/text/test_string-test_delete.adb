@@ -74,4 +74,25 @@ begin
       Test_Support.Assert (SB = "      Ada_With_Private_Absent,");
       Test_Support.Assert (S = "      ,");
    end;
+
+   --  vss-text#5
+   --
+   --  Check that `Delete` of the slice from last character to last character
+   --  in the null and an empty string doesn't raise exception.
+
+   declare
+      SN : VSS.Strings.Virtual_String;
+      SE : VSS.Strings.Virtual_String := "";
+
+   begin
+      SN.Delete (SN.At_Last_Character, SN.At_Last_Character);
+      Test_Support.Assert (SN.Is_Null);
+      Test_Support.Assert (SN.Is_Empty);
+      Test_Support.Assert (SN = SN);
+
+      SE.Delete (SE.At_Last_Character, SE.At_Last_Character);
+      Test_Support.Assert (not SE.Is_Null);
+      Test_Support.Assert (SE.Is_Empty);
+      Test_Support.Assert (SE = SE);
+   end;
 end Test_Delete;
