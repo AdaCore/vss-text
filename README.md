@@ -1,7 +1,6 @@
 # VSS-Text
 
 [![Build](https://github.com/AdaCore/vss-text/actions/workflows/main.yml/badge.svg)](https://github.com/AdaCore/vss-text/actions/workflows/main.yml)
-[![codecov](https://codecov.io/gh/AdaCore/vss-text/branch/master/graph/badge.svg)](https://codecov.io/gh/AdaCore/vss-text)
 [![alire](https://img.shields.io/endpoint?url=https://alire.ada.dev/badges/vss-text.json)](https://alire.ada.dev/crates/vss-text.html)
 
 A high level Unicode text processing library.
