@@ -6,7 +6,6 @@
 
 pragma Warnings (Off, ".* is an internal GNAT unit");
 with Ada.Strings.Unbounded.Aux;
-with Ada.Strings.Unbounded.VSS_Aux;
 with Ada.Strings.Wide_Wide_Unbounded.Aux;
 with Ada.Strings.Wide_Wide_Unbounded.VSS_Aux;
 pragma Warnings (On, ".* is an internal GNAT unit");
@@ -245,7 +244,7 @@ package body VSS.Strings.Conversions is
    begin
       return Result : Ada.Strings.Unbounded.Unbounded_String do
          if Item.Data.Size /= 0 then
-            Ada.Strings.Unbounded.VSS_Aux.Set_String
+            Ada.Strings.Unbounded.Aux.Set_String
               (Result,
                Natural (Item.Data.Size),
                Set'Access);
