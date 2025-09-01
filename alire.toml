@@ -1,5 +1,32 @@
 name = "vss_text"
-description = "Advanced string and text manipulation with Unicode support"
+description = "A high level Unicode text processing library"
+
+long-description = """
+## Warning - Work in Progress
+
+This crate is based on [`VSS`](https://github.com/AdaCore/VSS) (Virtual
+String System). VSS has been split into two crates:
+
+* [`vss_text`](https://alire.ada.dev/crates/vss_text) (this crate): a library
+  for Unicode text processing.
+* [`vss_extra`](https://alire.ada.dev/crates/vss_extra): libraries for handling
+  JSON, Regexp, XML and other features based on `vss_text`.
+
+Significant changes are planned in `vss_text` with the goal to make it a
+high-quality, high-performance library suitable for a wide range of
+applications.
+
+The changes include the following (non-exhaustive list):
+
+* API Changes
+  * Introduce an immutable string type.
+  * Repurpose the mutable `Virtual_String` type to a string builder type.
+  * Possibly rename the root package `VSS` to a new more appropriate name. Alire crate,
+    GPR project and repository names might change accordingly.
+* (done) Drop the support of multiple internal encodings in favor of a single internal
+  encoding (likely UTF-8) for improved performance.
+"""
+
 version = "25.0.0-dev"
 tags = ["unicode", "string", "text"]
 
