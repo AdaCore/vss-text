@@ -47,3 +47,13 @@ Max_Supported_Integer_Size = {type = "Enum", values = ["128", "64"], default = "
 
 [build-switches]
 "*".ada_version = "Ada2022"
+
+[environment.'case(os)'.linux.LD_LIBRARY_PATH]
+append = "${CRATE_ROOT}/.libs/release/relocatable"
+
+[environment.'case(os)'.macos.DYLD_LIBRARY_PATH]
+append = "${CRATE_ROOT}/.libs/release/relocatable"
+
+[environment.'case(os)'.windows.PATH]
+append = "${CRATE_ROOT}/.libs/release/relocatable"
+
