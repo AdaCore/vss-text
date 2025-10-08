@@ -6,7 +6,7 @@
 
 --  Configuration project for all subprojects of the VSS.
 
-with "../config/vss_config.gpr";
+with "../config/vss_text_config.gpr";
 
 abstract project VSS_Common is
 
@@ -29,10 +29,10 @@ abstract project VSS_Common is
    Ada_Coverage_Switches := ();
    Linker_Options := ();
 
-   Library_Dir      := "../.libs/" & VSS_Config.Build_Profile & "/" & Library_Kind;
-   Object_Dir       := "../.objs/" & VSS_Config.Build_Profile & "/" & Library_Kind;
-   Tests_Object_Dir := "../../.objs/" & VSS_Config.Build_Profile & "/tests";
-   Tools_Object_Dir := "../../.objs/" & VSS_Config.Build_Profile & "/tools";
+   Library_Dir      := "../.libs/" & VSS_Text_Config.Build_Profile & "/" & Library_Kind;
+   Object_Dir       := "../.objs/" & VSS_Text_Config.Build_Profile & "/" & Library_Kind;
+   Tests_Object_Dir := "../../.objs/" & VSS_Text_Config.Build_Profile & "/tests";
+   Tools_Object_Dir := "../../.objs/" & VSS_Text_Config.Build_Profile & "/tools";
 
    Common_Ada_Compiler_Switches :=
      ("-gnatW8");   --  Wide character encoding method UTF-8
@@ -40,7 +40,7 @@ abstract project VSS_Common is
    --  Build Profile
 
    VSS_Ada_Compiler_Switches := ();
-   case VSS_Config.Build_Profile is
+   case VSS_Text_Config.Build_Profile is
       when "release" =>
          VSS_Ada_Compiler_Switches := ("-g");
 
@@ -90,7 +90,7 @@ abstract project VSS_Common is
    --  Common set of switches
 
    Ada_Compiler_Switches :=
-     VSS_Config.Ada_Compiler_Switches
+     VSS_Text_Config.Ada_Compiler_Switches
        & Common_Ada_Compiler_Switches
        & VSS_Ada_Compiler_Switches
        & Coverage_Ada_Compiler_Switches

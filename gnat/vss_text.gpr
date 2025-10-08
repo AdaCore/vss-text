@@ -6,7 +6,7 @@
 
 --  VSS: Text processing subproject
 
-with "../config/vss_config";
+with "../config/vss_text_config";
 with "vss_common";
 with "vss_gnat";
 
@@ -47,7 +47,7 @@ library project VSS_Text is
 
    package Naming is
       for Implementation ("VSS.Implementation.Arithmetic_64")
-        use "vss-implementation-arithmetic_64__" & Vss_Config.Max_Supported_Integer_Size & ".adb";
+        use "vss-implementation-arithmetic_64__" & Vss_Text_Config.Max_Supported_Integer_Size & ".adb";
    end Naming;
 
 end VSS_Text;
