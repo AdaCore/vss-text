@@ -26,26 +26,30 @@ package VSS.Strings is
    pragma Preelaborate;
    pragma Remote_Types;
 
-   type Character_Count is range 0 .. 2 ** 30 - 1;
+   type Character_Offset is range -(2 ** 30 - 1) .. 2 ** 30 - 1;
+   subtype Character_Count is Character_Offset
+     range 0 .. Character_Offset'Last;
    subtype Character_Index is Character_Count range 1 .. Character_Count'Last;
 
-   type Grapheme_Cluster_Count is range 0 .. 2 ** 30 - 1;
+   type Grapheme_Cluster_Offset is range -(2 ** 30 - 1) .. 2 ** 30 - 1;
+   subtype Grapheme_Cluster_Count is Grapheme_Cluster_Offset
+     range 0 .. Grapheme_Cluster_Offset'Last;
    subtype Grapheme_Cluster_Index is Grapheme_Cluster_Count
      range 1 .. Grapheme_Cluster_Count'Last;
 
-   type Line_Count is new Natural;
+   type Line_Offset is new Integer;
+   subtype Line_Count is Line_Offset range 0 .. Line_Offset'Last;
    subtype Line_Index is Line_Count range 1 .. Line_Count'Last;
 
-   type Display_Cell_Count is new Natural;
-   subtype Display_Cell_Index is
-     Display_Cell_Count range 1 .. Display_Cell_Count'Last;
+   type Display_Cell_Offset is new Integer;
+   subtype Display_Cell_Count is Display_Cell_Offset
+     range 0 .. Display_Cell_Offset'Last;
+   subtype Display_Cell_Index is Display_Cell_Count
+     range 1 .. Display_Cell_Count'Last;
    --  Count of fixed pitch font cells, like cells in terminal.
    --
    --  Emoji and wide east asian characters occupies two cells, width of some
    --  grapheme clusters depends from the context.
-
-   type Column_Count is new Grapheme_Cluster_Count;
-   subtype Column_Index is Column_Count range 1 .. Column_Count'Last;
 
    type Hash_Type is mod 2**64;
 
