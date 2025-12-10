@@ -4,6 +4,8 @@
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
 
+pragma Ada_2022;
+
 package body VSS.Strings.Cursors.Iterators.Characters is
 
    use type VSS.Implementation.Referrers.Magic_String_Access;
