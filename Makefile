@@ -20,7 +20,7 @@ INSTALL_EXEC_DIR       ?= $(DESTDIR)$(BINDIR)
 INSTALL_LIBRARY_DIR    ?= $(DESTDIR)$(LIBDIR)
 INSTALL_ALI_DIR        ?= $(INSTALL_LIBRARY_DIR)/vss/$(word 2, $(subst _, ,$*))
 
-GPRBUILD_FLAGS = -p -j0 $(GPRFLAGS) \
+GPRBUILD_FLAGS = -p -j0 $(GPRFLAGS) $(GPRBUILD_GNATCOV_FLAGS) \
 	-XVSS_BUILD_PROFILE=$(word 1, $(subst _, ,$*)) \
 	-XVSS_LIBRARY_TYPE=$(word 2, $(subst _, ,$*))
 GPRINSTALL_FLAGS = $(GPRFLAGS) \
@@ -31,6 +31,8 @@ GPRINSTALL_FLAGS = $(GPRFLAGS) \
 	--prefix=$(PREFIX) --exec-subdir=$(INSTALL_EXEC_DIR) \
 	--lib-subdir=$(INSTALL_ALI_DIR) --project-subdir=$(INSTALL_PROJECT_DIR) \
 	--link-lib-subdir=$(INSTALL_LIBRARY_DIR) --sources-subdir=$(INSTALL_INCLUDE_DIR)
+GNATCOV_FLAGS =
+GPRBUILD_GNATCOV_FLAGS =
 
 OK_RE_TESTS := 615 # Number of re_tests to be passed
 
@@ -46,17 +48,45 @@ endif
 
 all: build-libs-development_relocatable
 
+ifndef COVERAGE
+
 build-all-libs: \
-	build-libs-release_relocatable build-libs-release_static build-libs-release_static-pic \
-	build-libs-validation_relocatable build-libs-validation_static build-libs-validation_static-pic
+	build-libs-release_relocatable \
+	build-libs-release_static \
+	build-libs-release_static-pic \
+	build-libs-validation_relocatable \
+	build-libs-validation_static \
+	build-libs-validation_static-pic
+
+build-tests: build-tests-validation_static build-performance-release_static
+
+install-all-libs: install-libs-release_static install-libs-release_static-pic install-libs-release_relocatable
+
+check: build-tests check_text
+
+else
+
+GNATCOV_FLAGS = \
+	-XVSS_BUILD_PROFILE=$(word 1, $(subst _, ,$*)) \
+	-XVSS_LIBRARY_TYPE=$(word 2, $(subst _, ,$*))
+GPRBUILD_GNATCOV_FLAGS = --implicit-with=gnatcov_rts --src-subdirs=gnatcov-instr -gnatyN
+
+build-all-libs: \
+	coverage-instrument-validation_static build-libs-validation_static
+
+build-tests: build-tests-validation_static
+
+install-all-libs: install-libs-validation_static
+
+check: coverage-instrument-validation_static build-tests check_text coverage-report-validation_static
+
+endif
 
 build-libs-%:
 	gprbuild $(GPRBUILD_FLAGS) gnat/vss_gnat.gpr
 	gprbuild $(GPRBUILD_FLAGS) gnat/vss_text.gpr
 
 install: install-libs-development_relocatable
-
-install-all-libs: install-libs-release_static install-libs-release_static-pic install-libs-release_relocatable
 
 install-libs-%:
 	gprinstall $(GPRINSTALL_FLAGS)/gnat -f -p -P gnat/vss_gnat.gpr --install-name=vss_gnat
@@ -70,16 +100,11 @@ generate-%:
 	rm -f source/text/ucd/*.ad[sb]
 	gnatchop -gnat2022 .objs/ucd.ada source/text/ucd
 
-build-tests: build-tests-validation_static build-performance-release_static
-
 build-tests-%:
 	gprbuild $(GPRBUILD_FLAGS) gnat/tests/vss_text_tests.gpr
-	gprbuild $(GPRBUILD_FLAGS) gnat/tests/vss_stream_tests.gpr
 
 build-performance-%:
 	gprbuild $(GPRBUILD_FLAGS) gnat/tests/vss_text_performance.gpr
-
-check: build-tests check_text
 
 check_text:
 	.objs/validation/tests/test_characters data/ucd
@@ -115,7 +140,9 @@ check_text:
 	.objs/validation/tests/test_string_decoder EUC-JP false testsuite/text/converters/eucjp_chars.eucjp testsuite/text/converters/eucjp_chars-utf8.txt
 	.objs/validation/tests/test_string_decoder shift-jis false testsuite/text/converters/sjis_chars.sjis testsuite/text/converters/sjis_chars-utf8.txt
 	.objs/validation/tests/test_decimal_to_number /dev/null data/parse-number-fxx-test-data/data/*.txt
+ifndef COVERAGE
 	.objs/release/tests/test_string_performance
+endif
 
 check_install:
 	echo 'with "vss_text.gpr";'                          >  example.gpr
@@ -135,11 +162,17 @@ check_install:
 coverage:
 	find .objs/ -name *.o | xargs -s 512 gcov || true
 
+coverage-instrument-%:
+	gnatcov instrument --level=stmt --dump-trigger=atexit $(GNATCOV_FLAGS) -Pgnat/tests/vss_text_tests.gpr
+
+coverage-report-%:
+	gnatcov coverage --level=stmt --annotate=html *.srctrace -Pgnat/tests/vss_text_tests.gpr -XVSS_BUILD_PROFILE=validation -XVSS_LIBRARY_TYPE=static # --subdirs=gnatcov-instr
+
 docs:
 	make -C docs
 
 clean:
-	rm -rf .objs .libs
+	rm -rf .objs .libs *.srctrace
 
 spellcheck:
 	@STATUS=0; \
