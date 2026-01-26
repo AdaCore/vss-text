@@ -74,7 +74,6 @@ build-tests: build-tests-validation_static build-performance-release_static
 
 build-tests-%:
 	gprbuild $(GPRBUILD_FLAGS) gnat/tests/vss_text_tests.gpr
-	gprbuild $(GPRBUILD_FLAGS) gnat/tests/vss_stream_tests.gpr
 
 build-performance-%:
 	gprbuild $(GPRBUILD_FLAGS) gnat/tests/vss_text_performance.gpr
