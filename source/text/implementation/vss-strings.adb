@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2020-2025, AdaCore
+--  Copyright (C) 2020-2026, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -715,6 +715,31 @@ package body VSS.Strings is
          end if;
       end return;
    end Head_Before;
+
+   -------------
+   -- Head_To --
+   -------------
+
+   function Head_To
+     (Self : Virtual_String'Class;
+      To   : VSS.Strings.Cursors.Abstract_Cursor'Class)
+      return Virtual_String
+   is
+      First_Position : aliased VSS.Implementation.Strings.Cursor;
+      Last_Position  : constant VSS.Implementation.Strings.Cursor :=
+        VSS.Strings.Cursors.Internals.First_Cursor_Access_Constant (To).all;
+      Success        : Boolean with Unreferenced;
+
+   begin
+      return Result : Virtual_String do
+         if VSS.Strings.Cursors.Internals.Is_Owner (To, Self) then
+            VSS.Implementation.UTF8_Strings.At_First_Character
+              (Self.Data, First_Position);
+            VSS.Implementation.UTF8_Strings.Slice
+              (Self.Data, First_Position, Last_Position, Result.Data);
+         end if;
+      end return;
+   end Head_To;
 
    ------------
    -- Insert --

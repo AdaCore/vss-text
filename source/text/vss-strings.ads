@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2020-2025, AdaCore
+--  Copyright (C) 2020-2026, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -372,6 +372,12 @@ package VSS.Strings is
       return Virtual_String;
    --  Returns slice of the string. Return "null" string when one of cursors
    --  doesn't belong to given string or invalid cursors.
+
+   function Head_To
+     (Self : Virtual_String'Class;
+      To   : VSS.Strings.Cursors.Abstract_Cursor'Class)
+      return Virtual_String;
+   --  Return head of the string including given position.
 
    function Head_Before
      (Self   : Virtual_String'Class;
