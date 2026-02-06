@@ -1,10 +1,11 @@
 --
---  Copyright (C) 2021-2025, AdaCore
+--  Copyright (C) 2021-2026, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
 
 with VSS.Implementation.UCD_Core;
+with VSS.Implementation.UCD_Utilities;
 
 with VSS.Strings.Cursors.Markers;
 pragma Unreferenced (VSS.Strings.Cursors.Markers);
@@ -21,11 +22,6 @@ package body VSS.Strings.Cursors.Iterators.Words is
       Position : VSS.Implementation.Strings.Cursor);
    --  Lookup for word boundaries around given position and setup
    --  iterator to point to found segment.
-
-   function Extract_Core_Data
-     (Code : VSS.Unicode.Code_Point)
-      return VSS.Implementation.UCD_Core.Core_Data_Record;
-   --  Return core data record for the given character.
 
    function Apply_WB6
      (Text  : VSS.Implementation.UTF8_Strings.UTF8_String_Data;
@@ -81,7 +77,7 @@ package body VSS.Strings.Cursors.Iterators.Words is
          end if;
 
          Properties :=
-           Extract_Core_Data
+           VSS.Implementation.UCD_Utilities.Extract_Core_Data
              (VSS.Implementation.UTF8_Strings.Element (Text, Position));
 
          exit when Properties.WB not in WB_Extend | WB_FO | WB_ZWJ;
@@ -108,7 +104,7 @@ package body VSS.Strings.Cursors.Iterators.Words is
          end if;
 
          Properties :=
-           Extract_Core_Data
+           VSS.Implementation.UCD_Utilities.Extract_Core_Data
              (VSS.Implementation.UTF8_Strings.Element (Text, Position));
 
          exit when Properties.WB not in WB_Extend | WB_FO | WB_ZWJ;
@@ -136,7 +132,7 @@ package body VSS.Strings.Cursors.Iterators.Words is
          end if;
 
          Properties :=
-           Extract_Core_Data
+           VSS.Implementation.UCD_Utilities.Extract_Core_Data
              (VSS.Implementation.UTF8_Strings.Element (Text, Position));
 
          if Properties.WB = WB_RI then
@@ -169,7 +165,7 @@ package body VSS.Strings.Cursors.Iterators.Words is
          end if;
 
          Properties :=
-           Extract_Core_Data
+           VSS.Implementation.UCD_Utilities.Extract_Core_Data
              (VSS.Implementation.UTF8_Strings.Element (Text, Position));
 
          exit when Properties.WB not in WB_Extend | WB_FO | WB_ZWJ;
@@ -196,7 +192,7 @@ package body VSS.Strings.Cursors.Iterators.Words is
          end if;
 
          Properties :=
-           Extract_Core_Data
+           VSS.Implementation.UCD_Utilities.Extract_Core_Data
              (VSS.Implementation.UTF8_Strings.Element (Text, Position));
 
          exit when Properties.WB not in WB_Extend | WB_FO | WB_ZWJ;
@@ -223,7 +219,7 @@ package body VSS.Strings.Cursors.Iterators.Words is
          end if;
 
          Properties :=
-           Extract_Core_Data
+           VSS.Implementation.UCD_Utilities.Extract_Core_Data
              (VSS.Implementation.UTF8_Strings.Element (Text, Position));
 
          exit when Properties.WB not in WB_Extend | WB_FO | WB_ZWJ;
@@ -250,7 +246,7 @@ package body VSS.Strings.Cursors.Iterators.Words is
          end if;
 
          Properties :=
-           Extract_Core_Data
+           VSS.Implementation.UCD_Utilities.Extract_Core_Data
              (VSS.Implementation.UTF8_Strings.Element (Text, Position));
 
          exit when Properties.WB not in WB_Extend | WB_FO | WB_ZWJ;
@@ -268,30 +264,6 @@ package body VSS.Strings.Cursors.Iterators.Words is
       raise Program_Error;
       return Self.Backward;
    end Backward;
-
-   -----------------------
-   -- Extract_Core_Data --
-   -----------------------
-
-   function Extract_Core_Data
-     (Code : VSS.Unicode.Code_Point)
-      return VSS.Implementation.UCD_Core.Core_Data_Record
-   is
-      use type VSS.Implementation.UCD_Core.Core_Offset;
-      use type VSS.Unicode.Code_Point;
-
-      Block : constant VSS.Implementation.UCD_Core.Core_Index :=
-        VSS.Implementation.UCD_Core.Core_Index
-          (Code / VSS.Implementation.UCD_Core.Block_Size);
-      Offset : constant VSS.Implementation.UCD_Core.Core_Offset :=
-        VSS.Implementation.UCD_Core.Core_Offset
-          (Code mod VSS.Implementation.UCD_Core.Block_Size);
-
-   begin
-      return
-        VSS.Implementation.UCD_Core.Core_Data_Table
-          (VSS.Implementation.UCD_Core.Core_Index_Table (Block) + Offset);
-   end Extract_Core_Data;
 
    -------------
    -- Forward --
@@ -324,7 +296,7 @@ package body VSS.Strings.Cursors.Iterators.Words is
 
       Right            := Self.First_Position;
       Right_Properties :=
-        Extract_Core_Data
+        VSS.Implementation.UCD_Utilities.Extract_Core_Data
           (VSS.Implementation.UTF8_Strings.Element (Data, Right));
 
       Self.Kind :=
@@ -349,7 +321,7 @@ package body VSS.Strings.Cursors.Iterators.Words is
          end if;
 
          Right_Properties :=
-           Extract_Core_Data
+           VSS.Implementation.UCD_Utilities.Extract_Core_Data
              (VSS.Implementation.UTF8_Strings.Element (Data, Right));
 
          if Left_Properties.WB = WB_CR
@@ -415,7 +387,7 @@ package body VSS.Strings.Cursors.Iterators.Words is
                end if;
 
                Right_Properties :=
-                 Extract_Core_Data
+                 VSS.Implementation.UCD_Utilities.Extract_Core_Data
                    (VSS.Implementation.UTF8_Strings.Element (Data, Right));
 
                exit when Right_Properties.WB not in WB_Extend | WB_FO | WB_ZWJ;

@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2020-2025, AdaCore
+--  Copyright (C) 2020-2026, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -373,6 +373,12 @@ package VSS.Strings is
    --  Returns slice of the string. Return "null" string when one of cursors
    --  doesn't belong to given string or invalid cursors.
 
+   function Head_To
+     (Self : Virtual_String'Class;
+      To   : VSS.Strings.Cursors.Abstract_Cursor'Class)
+      return Virtual_String;
+   --  Return head of the string including given position.
+
    function Head_Before
      (Self   : Virtual_String'Class;
       Before : VSS.Strings.Cursors.Abstract_Cursor'Class)
@@ -438,6 +444,18 @@ package VSS.Strings is
       Terminators     : Line_Terminator_Set := New_Line_Function;
       Keep_Terminator : Boolean := False)
       return VSS.String_Vectors.Virtual_String_Vector;
+
+   function Trim (Self : Virtual_String'Class) return Virtual_String;
+   --  Remove characters with Unicode's `White_Space` property from the both
+   --  begin and end of the string.
+
+   function Trim_Leading (Self : Virtual_String'Class) return Virtual_String;
+   --  Remove characters with Unicode's `White_Space` property from the begin
+   --  of the string.
+
+   function Trim_Trailing (Self : Virtual_String'Class) return Virtual_String;
+   --  Remove characters with Unicode's `White_Space` property from the end of
+   --  the string.
 
    procedure Put_Image
      (Buffer : in out Ada.Strings.Text_Buffers.Root_Buffer_Type'Class;

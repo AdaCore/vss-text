@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2021-2025, AdaCore
+--  Copyright (C) 2021-2026, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -104,6 +104,9 @@ package VSS.Characters is
 
    function Get_Cased (Self : Virtual_Character) return Boolean;
    --  Return value of the Cased property of the character.
+
+   function Get_White_Space (Self : Virtual_Character) return Boolean;
+   --  Return value of the `White_Space` property of the character.
 
    function Get_Lowercase_Mapping
      (Self   : Virtual_Character) return VSS.Strings.Virtual_String;

@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2021-2025, AdaCore
+--  Copyright (C) 2021-2026, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -12,6 +12,7 @@ with UCD.Case_Folding_Loader;
 with UCD.Characters;
 with UCD.Derived_Core_Properties_Loader;
 with UCD.Derived_General_Category_Loader;
+with UCD.Prop_List_Loader;
 with UCD.Properties;
 with UCD.Property_Aliases_Loader;
 with UCD.Property_Value_Aliases_Loader;
@@ -62,6 +63,7 @@ procedure Test_Characters is
          UCD.Characters.Initialize_Character_Database;
 
          UCD.Property_Value_Aliases_Loader.Load_Missing (UCD_Root);
+         UCD.Prop_List_Loader.Load (UCD_Root);
          UCD.Derived_General_Category_Loader.Load (UCD_Root);
          UCD.Derived_Core_Properties_Loader.Load (UCD_Root);
 
@@ -177,6 +179,15 @@ procedure Test_Characters is
          Cased_N            : constant UCD.Properties.Property_Value_Access :=
            UCD.Properties.Resolve (Cased_Property, "N");
 
+         White_Space_Property : constant UCD.Properties.Property_Access :=
+           UCD.Properties.Resolve ("White_Space");
+         White_Space_Y        : constant
+           UCD.Properties.Property_Value_Access :=
+             UCD.Properties.Resolve (White_Space_Property, "Y");
+         White_Space_N        : constant
+           UCD.Properties.Property_Value_Access :=
+             UCD.Properties.Resolve (White_Space_Property, "N");
+
          Simple_Case_Folding_Property : constant
            UCD.Properties.Property_Access :=
              UCD.Properties.Resolve ("Simple_Case_Folding");
@@ -242,6 +253,23 @@ procedure Test_Characters is
                  (UCD.Characters.Get
                     (VSS.Characters.Virtual_Character'Pos (Character),
                      Cased_Property) = Cased_N);
+            end if;
+
+            --  White_Space
+
+            if VSS.Characters.Is_Valid_Virtual_Character (Character)
+              and then VSS.Characters.Get_White_Space (Character)
+            then
+               Test_Support.Assert
+                 (UCD.Characters.Get
+                    (VSS.Characters.Virtual_Character'Pos (Character),
+                     White_Space_Property) = White_Space_Y);
+
+            else
+               Test_Support.Assert
+                 (UCD.Characters.Get
+                    (VSS.Characters.Virtual_Character'Pos (Character),
+                     White_Space_Property) = White_Space_N);
             end if;
 
             --  Simple case folding
@@ -329,6 +357,15 @@ procedure Test_Characters is
         (VSS.Characters.Get_General_Category
            (VSS.Characters.Virtual_Character'Val (16#D800#))
          = VSS.Characters.Surrogate);
+
+      --  `White_Space` property
+
+      Test_Support.Assert
+        (VSS.Characters.Get_White_Space
+           (VSS.Characters.Virtual_Character'Val (16#20#)) = True);
+      Test_Support.Assert
+        (VSS.Characters.Get_White_Space
+           (VSS.Characters.Virtual_Character'Val (16#41#)) = False);
 
       --  Case mappings
 

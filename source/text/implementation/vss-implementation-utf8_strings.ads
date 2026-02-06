@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2020-2025, AdaCore
+--  Copyright (C) 2020-2026, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -234,8 +234,6 @@ private
        .Abstract_Text_Storage'Max_Size_In_Storage_Elements - 1;
    --  Maximum length of the UTF8 code unit sequence with short string
    --  optimization is used.
-
-   Default_UTF8_String_Data : constant UTF8_String_Data := (others => <>);
 
    function Is_SSO (Self : UTF8_String_Data) return Boolean;
 
