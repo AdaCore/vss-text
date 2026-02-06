@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2021-2024, AdaCore
+--  Copyright (C) 2021-2026, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -36,6 +36,8 @@ package body Gen_UCD.Core_Properties is
       procedure Set_OLower (Code : UCD.Code_Point; To : Boolean);
 
       procedure Set_OUpper (Code : UCD.Code_Point; To : Boolean);
+
+      procedure Set_WSpace (Code : UCD.Code_Point; To : Boolean);
 
       procedure Set_ExtPict (Code : UCD.Code_Point; To : Boolean);
 
@@ -147,6 +149,11 @@ package body Gen_UCD.Core_Properties is
          RI_Y             :
            constant not null UCD.Properties.Property_Value_Access :=
              UCD.Properties.Resolve (RI_Property, "Y");
+         WSpace_Property  : constant not null UCD.Properties.Property_Access :=
+           UCD.Properties.Resolve ("WSpace");
+         WSpace_Y         :
+           constant not null UCD.Properties.Property_Value_Access :=
+             UCD.Properties.Resolve (WSpace_Property, "Y");
 
       begin
          for Code in UCD.Code_Point loop
@@ -162,6 +169,9 @@ package body Gen_UCD.Core_Properties is
             Database.Set_ExtPict
               (Code,
                UCD.Characters.Get (Code, ExtPict_Property) = ExtPict_Y);
+            Database.Set_WSpace
+              (Code,
+               UCD.Characters.Get (Code, WSpace_Property) = WSpace_Y);
 
             Database.Set_GCB
               (Code, Unsigned_4 (GCB_Enumeration.Representation (Code)));
@@ -223,7 +233,7 @@ package body Gen_UCD.Core_Properties is
 
    package body Database is
 
-      --  GC, OLower, and OUpper are used for character classification in
+      --  GC, OLower, OUpper, WSpace are used for character classification in
       --  public API, and put into the first byte.
       --
       --  GCB, ExtPict, and InCB are used by grapheme cluster iterator and
@@ -245,13 +255,13 @@ package body Gen_UCD.Core_Properties is
       --    --  | EPic |     InCB    |            GCB
       --
       --    07  |  06  |  05  |  04  |  03  |  02  |  01  |  00
-      --    --  | OUpp | OLow |                CG
+      --  WSpace| OUpp | OLow |                CG
 
       type Core_Data_Record is record
          GC             : Gen_UCD.Unsigned_5 := 0;
          OLower         : Gen_UCD.Unsigned_1 := 0;
          OUpper         : Gen_UCD.Unsigned_1 := 0;
-         Reserved_7_7   : Gen_UCD.Unsigned_1 := 0;
+         WSpace         : Gen_UCD.Unsigned_1 := 0;
          GCB            : Gen_UCD.Unsigned_4 := 0;
          InCB           : Gen_UCD.Unsigned_2 := 0;
          ExtPict        : Gen_UCD.Unsigned_1 := 0;
@@ -270,7 +280,7 @@ package body Gen_UCD.Core_Properties is
          GC             at 0 range 0 .. 4;
          OLower         at 0 range 5 .. 5;
          OUpper         at 0 range 6 .. 6;
-         Reserved_7_7   at 0 range 7 .. 7;
+         WSpace         at 0 range 7 .. 7;
          GCB            at 0 range 8 .. 11;
          InCB           at 0 range 12 .. 13;
          ExtPict        at 0 range 14 .. 14;
@@ -642,6 +652,15 @@ package body Gen_UCD.Core_Properties is
          Raw (Gen_UCD.Unsigned_32 (Code)).WB := To;
       end Set_WB;
 
+      ----------------
+      -- Set_WSpace --
+      ----------------
+
+      procedure Set_WSpace (Code : UCD.Code_Point; To : Boolean) is
+      begin
+         Raw (Gen_UCD.Unsigned_32 (Code)).WSpace := Boolean'Pos (To);
+      end Set_WSpace;
+
       -----------------------
       -- Uncompressed_Size --
       -----------------------
@@ -751,6 +770,7 @@ package body Gen_UCD.Core_Properties is
          Put_Line (File, "      GC      : GC_Values;");
          Put_Line (File, "      OLower  : Boolean;");
          Put_Line (File, "      OUpper  : Boolean;");
+         Put_Line (File, "      WSpace  : Boolean;");
          Put_Line (File, "      GCB     : GCB_Values;");
          Put_Line (File, "      InCB    : INCB_Values;");
          Put_Line (File, "      ExtPict : Boolean;");
@@ -766,6 +786,7 @@ package body Gen_UCD.Core_Properties is
          Put_Line (File, "      GC      at 0 range 0 .. 4;");
          Put_Line (File, "      OLower  at 0 range 5 .. 5;");
          Put_Line (File, "      OUpper  at 0 range 6 .. 6;");
+         Put_Line (File, "      WSpace  at 0 range 7 .. 7;");
          Put_Line (File, "      GCB     at 0 range 8 .. 11;");
          Put_Line (File, "      InCB    at 0 range 12 .. 13;");
          Put_Line (File, "      ExtPict at 0 range 14 .. 14;");
