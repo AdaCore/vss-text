@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2021-2025, AdaCore
+--  Copyright (C) 2021-2026, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -8,6 +8,7 @@ pragma Ada_2022;
 
 with VSS.Implementation.Character_Codes;
 with VSS.Implementation.UCD_Core;
+with VSS.Implementation.UCD_Utilities;
 
 with VSS.Strings.Cursors.Markers;
 pragma Unreferenced (VSS.Strings.Cursors.Markers);
@@ -25,11 +26,6 @@ package body VSS.Strings.Cursors.Iterators.Grapheme_Clusters is
       Position : VSS.Implementation.Strings.Cursor);
    --  Lookup for grapheme cluster boundaries around given position and setup
    --  iterator to point to found segment.
-
-   function Extract_Core_Data
-     (Code : VSS.Unicode.Code_Point)
-      return VSS.Implementation.UCD_Core.Core_Data_Record;
-   --  Return core data record for the given character.
 
    function Apply_RI
      (Text : VSS.Implementation.UTF8_Strings.UTF8_String_Data;
@@ -120,7 +116,7 @@ package body VSS.Strings.Cursors.Iterators.Grapheme_Clusters is
          end if;
 
          Properties :=
-           Extract_Core_Data
+           VSS.Implementation.UCD_Utilities.Extract_Core_Data
              (VSS.Implementation.UTF8_Strings.Element (Text, Position));
 
          if Properties.GCB = GCB_EX then
@@ -155,7 +151,7 @@ package body VSS.Strings.Cursors.Iterators.Grapheme_Clusters is
          end if;
 
          Properties :=
-           Extract_Core_Data
+           VSS.Implementation.UCD_Utilities.Extract_Core_Data
              (VSS.Implementation.UTF8_Strings.Element (Text, Position));
 
          case Properties.InCB is
@@ -191,7 +187,7 @@ package body VSS.Strings.Cursors.Iterators.Grapheme_Clusters is
             return Count mod 2 = 0;
          end if;
 
-         if Extract_Core_Data
+         if VSS.Implementation.UCD_Utilities.Extract_Core_Data
            (VSS.Implementation.UTF8_Strings.Element (Text, Position)).GCB
               = GCB_RI
          then
@@ -241,7 +237,7 @@ package body VSS.Strings.Cursors.Iterators.Grapheme_Clusters is
          else
             Left            := Self.Last_Position;
             Left_Properties :=
-              Extract_Core_Data
+              VSS.Implementation.UCD_Utilities.Extract_Core_Data
                 (VSS.Implementation.UTF8_Strings.Element (Text, Left));
 
             loop
@@ -260,7 +256,7 @@ package body VSS.Strings.Cursors.Iterators.Grapheme_Clusters is
 
                else
                   Left_Properties :=
-                    Extract_Core_Data
+                    VSS.Implementation.UCD_Utilities.Extract_Core_Data
                       (VSS.Implementation.UTF8_Strings.Element (Text, Left));
 
                   if Left_Properties.GCB = GCB_CR
@@ -397,7 +393,8 @@ package body VSS.Strings.Cursors.Iterators.Grapheme_Clusters is
          Code     := VSS.Implementation.UTF8_Strings.Element (Text, Position);
 
          loop
-            Properties := Extract_Core_Data (Code);
+            Properties :=
+              VSS.Implementation.UCD_Utilities.Extract_Core_Data (Code);
 
             if Properties.EA in EA_W | EA_F then
                return 2;
@@ -425,7 +422,8 @@ package body VSS.Strings.Cursors.Iterators.Grapheme_Clusters is
             Position   := Self.First_Position;
             Code       :=
               VSS.Implementation.UTF8_Strings.Element (Text, Position);
-            Properties := Extract_Core_Data (Code);
+            Properties :=
+              VSS.Implementation.UCD_Utilities.Extract_Core_Data (Code);
 
             if not Properties.EPres then
                return 1;
@@ -435,30 +433,6 @@ package body VSS.Strings.Cursors.Iterators.Grapheme_Clusters is
          return 2;
       end;
    end Display_Width;
-
-   -----------------------
-   -- Extract_Core_Data --
-   -----------------------
-
-   function Extract_Core_Data
-     (Code : VSS.Unicode.Code_Point)
-      return VSS.Implementation.UCD_Core.Core_Data_Record
-   is
-      use type VSS.Implementation.UCD_Core.Core_Offset;
-      use type VSS.Unicode.Code_Point;
-
-      Block : constant VSS.Implementation.UCD_Core.Core_Index :=
-        VSS.Implementation.UCD_Core.Core_Index
-          (Code / VSS.Implementation.UCD_Core.Block_Size);
-      Offset : constant VSS.Implementation.UCD_Core.Core_Offset :=
-        VSS.Implementation.UCD_Core.Core_Offset
-          (Code mod VSS.Implementation.UCD_Core.Block_Size);
-
-   begin
-      return
-        VSS.Implementation.UCD_Core.Core_Data_Table
-          (VSS.Implementation.UCD_Core.Core_Index_Table (Block) + Offset);
-   end Extract_Core_Data;
 
    -------------
    -- Forward --
@@ -499,7 +473,8 @@ package body VSS.Strings.Cursors.Iterators.Grapheme_Clusters is
          end if;
 
          Right            := Self.First_Position;
-         Right_Properties := Extract_Core_Data (Right_Code);
+         Right_Properties :=
+           VSS.Implementation.UCD_Utilities.Extract_Core_Data (Right_Code);
 
          loop
             Left            := Right;
@@ -518,7 +493,8 @@ package body VSS.Strings.Cursors.Iterators.Grapheme_Clusters is
                return True;
             end if;
 
-            Right_Properties := Extract_Core_Data (Right_Code);
+            Right_Properties :=
+              VSS.Implementation.UCD_Utilities.Extract_Core_Data (Right_Code);
 
             case Forward_GCB_Rules (Left_Properties.GCB, Right_Properties.GCB)
             is
@@ -655,7 +631,8 @@ package body VSS.Strings.Cursors.Iterators.Grapheme_Clusters is
          --
          --  Only `Emoji` complete emoji_zwj_element
 
-         Properties := Extract_Core_Data (Code);
+         Properties :=
+           VSS.Implementation.UCD_Utilities.Extract_Core_Data (Code);
 
          if not Properties.Emoji then
             --  Non-Emoji character can't start emoji seqeunce.
@@ -684,7 +661,8 @@ package body VSS.Strings.Cursors.Iterators.Grapheme_Clusters is
                  (Text, Position, Code);
          exit when Position.Index > Self.Last_Position.Index;
 
-         Properties := Extract_Core_Data (Code);
+         Properties :=
+           VSS.Implementation.UCD_Utilities.Extract_Core_Data (Code);
 
          case Code is
             when VSS.Implementation.Character_Codes.Zero_Width_Joiner =>

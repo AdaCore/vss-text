@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2021-2025, AdaCore
+--  Copyright (C) 2021-2026, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -8,6 +8,7 @@ pragma Ada_2022;
 
 with VSS.Implementation.Strings;
 with VSS.Implementation.UCD_Core;
+with VSS.Implementation.UCD_Utilities;
 with VSS.Implementation.UTF8_Casing;
 with VSS.Implementation.UTF8_Strings;
 with VSS.Locales;
@@ -50,43 +51,14 @@ package body VSS.Characters is
       VSS.Implementation.UCD_Core.GC_Zp => Paragraph_Separator,
       VSS.Implementation.UCD_Core.GC_Zs => Space_Separator];
 
-   function Extract_Core_Data
-     (Code : VSS.Unicode.Code_Point)
-      return VSS.Implementation.UCD_Core.Core_Data_Record;
-   --  Return core data record for the given character.
-
-   -----------------------
-   -- Extract_Core_Data --
-   -----------------------
-
-   function Extract_Core_Data
-     (Code : VSS.Unicode.Code_Point)
-      return VSS.Implementation.UCD_Core.Core_Data_Record
-   is
-      use type VSS.Implementation.UCD_Core.Core_Offset;
-      use type VSS.Unicode.Code_Point;
-
-      Block : constant VSS.Implementation.UCD_Core.Core_Index :=
-        VSS.Implementation.UCD_Core.Core_Index
-          (Code
-           / VSS.Unicode.Code_Point (VSS.Implementation.UCD_Core.Block_Size));
-      Offset : constant VSS.Implementation.UCD_Core.Core_Offset :=
-        VSS.Implementation.UCD_Core.Core_Offset
-          (Code mod VSS.Implementation.UCD_Core.Block_Size);
-
-   begin
-      return
-        VSS.Implementation.UCD_Core.Core_Data_Table
-          (VSS.Implementation.UCD_Core.Core_Index_Table (Block) + Offset);
-   end Extract_Core_Data;
-
    ---------------
    -- Get_Cased --
    ---------------
 
    function Get_Cased (Self : Virtual_Character) return Boolean is
       Data : constant VSS.Implementation.UCD_Core.Core_Data_Record :=
-        Extract_Core_Data (Virtual_Character'Pos (Self));
+        VSS.Implementation.UCD_Utilities.Extract_Core_Data
+          (Virtual_Character'Pos (Self));
 
    begin
       return
@@ -112,7 +84,8 @@ package body VSS.Characters is
 
       declare
          Data : constant VSS.Implementation.UCD_Core.Core_Data_Record :=
-           Extract_Core_Data (Virtual_Character'Pos (Self));
+           VSS.Implementation.UCD_Utilities.Extract_Core_Data
+             (Virtual_Character'Pos (Self));
 
       begin
          return GC_To_General_Ccategory (Data.GC);
@@ -125,7 +98,8 @@ package body VSS.Characters is
 
    function Get_Lowercase (Self : Virtual_Character) return Boolean is
       Data : constant VSS.Implementation.UCD_Core.Core_Data_Record :=
-        Extract_Core_Data (Virtual_Character'Pos (Self));
+        VSS.Implementation.UCD_Utilities.Extract_Core_Data
+          (Virtual_Character'Pos (Self));
 
    begin
       return Data.GC = VSS.Implementation.UCD_Core.GC_Ll or Data.OLower;
@@ -295,7 +269,8 @@ package body VSS.Characters is
 
    function Get_Uppercase (Self : Virtual_Character) return Boolean is
       Data : constant VSS.Implementation.UCD_Core.Core_Data_Record :=
-        Extract_Core_Data (Virtual_Character'Pos (Self));
+        VSS.Implementation.UCD_Utilities.Extract_Core_Data
+          (Virtual_Character'Pos (Self));
 
    begin
       return Data.GC = VSS.Implementation.UCD_Core.GC_Lu or Data.OUpper;
