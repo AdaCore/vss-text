@@ -105,6 +105,9 @@ package VSS.Characters is
    function Get_Cased (Self : Virtual_Character) return Boolean;
    --  Return value of the Cased property of the character.
 
+   function Get_White_Space (Self : Virtual_Character) return Boolean;
+   --  Return value of the `White_Space` property of the character.
+
    function Get_Lowercase_Mapping
      (Self   : Virtual_Character) return VSS.Strings.Virtual_String;
    --  Return value of the Lowercase_Mapping property of the character with

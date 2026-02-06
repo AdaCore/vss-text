@@ -305,6 +305,19 @@ package body VSS.Characters is
       end return;
    end Get_Uppercase_Mapping;
 
+   ---------------------
+   -- Get_White_Space --
+   ---------------------
+
+   function Get_White_Space (Self : Virtual_Character) return Boolean is
+      Data : constant VSS.Implementation.UCD_Core.Core_Data_Record :=
+        VSS.Implementation.UCD_Utilities.Extract_Core_Data
+          (Virtual_Character'Pos (Self));
+
+   begin
+      return Data.WSpace;
+   end Get_White_Space;
+
    ----------------
    -- Is_Control --
    ----------------
