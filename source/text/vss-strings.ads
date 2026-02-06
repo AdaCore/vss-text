@@ -445,6 +445,18 @@ package VSS.Strings is
       Keep_Terminator : Boolean := False)
       return VSS.String_Vectors.Virtual_String_Vector;
 
+   function Trim (Self : Virtual_String'Class) return Virtual_String;
+   --  Remove characters with Unicode's `White_Space` property from the both
+   --  begin and end of the string.
+
+   function Trim_Leading (Self : Virtual_String'Class) return Virtual_String;
+   --  Remove characters with Unicode's `White_Space` property from the begin
+   --  of the string.
+
+   function Trim_Trailing (Self : Virtual_String'Class) return Virtual_String;
+   --  Remove characters with Unicode's `White_Space` property from the end of
+   --  the string.
+
    procedure Put_Image
      (Buffer : in out Ada.Strings.Text_Buffers.Root_Buffer_Type'Class;
       Item   : Virtual_String);

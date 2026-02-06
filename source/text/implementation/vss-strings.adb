@@ -1232,6 +1232,79 @@ package body VSS.Strings is
       Transformer.Transform (Self);
    end Transform;
 
+   ----------
+   -- Trim --
+   ----------
+
+   function Trim (Self : Virtual_String'Class) return Virtual_String is
+   begin
+      return Self.Trim_Leading.Trim_Trailing;
+   end Trim;
+
+   ------------------
+   -- Trim_Leading --
+   ------------------
+
+   function Trim_Leading (Self : Virtual_String'Class) return Virtual_String is
+      First_Position : aliased VSS.Implementation.Strings.Cursor;
+      Last_Position  : aliased VSS.Implementation.Strings.Cursor;
+      Code           : VSS.Unicode.Code_Point'Base;
+      Success        : Boolean with Unreferenced;
+
+   begin
+      VSS.Implementation.UTF8_Strings.Before_First_Character
+        (Self.Data, First_Position);
+
+      while VSS.Implementation.UTF8_Strings.Forward_Element
+              (Self.Data, First_Position, Code)
+      loop
+         exit when not VSS.Characters.Get_White_Space
+                         (VSS.Characters.Virtual_Character'Val (Code));
+      end loop;
+
+      return Result : Virtual_String do
+         VSS.Implementation.UTF8_Strings.After_Last_Character
+           (Self.Data, Last_Position);
+         Success :=
+           VSS.Implementation.UTF8_Strings.Backward (Self.Data, Last_Position);
+         VSS.Implementation.UTF8_Strings.Slice
+           (Self.Data, First_Position, Last_Position, Result.Data);
+      end return;
+   end Trim_Leading;
+
+   -------------------
+   -- Trim_Trailing --
+   -------------------
+
+   function Trim_Trailing
+     (Self : Virtual_String'Class) return Virtual_String
+   is
+      First_Position : aliased VSS.Implementation.Strings.Cursor;
+      Last_Position  : aliased VSS.Implementation.Strings.Cursor;
+      Code           : VSS.Unicode.Code_Point'Base;
+
+   begin
+      VSS.Implementation.UTF8_Strings.After_Last_Character
+        (Self.Data, Last_Position);
+
+      while VSS.Implementation.UTF8_Strings.Backward
+              (Self.Data, Last_Position)
+      loop
+         Code :=
+           VSS.Implementation.UTF8_Strings.Element (Self.Data, Last_Position);
+
+         exit when not VSS.Characters.Get_White_Space
+                         (VSS.Characters.Virtual_Character'Val (Code));
+      end loop;
+
+      return Result : Virtual_String do
+         VSS.Implementation.UTF8_Strings.At_First_Character
+           (Self.Data, First_Position);
+         VSS.Implementation.UTF8_Strings.Slice
+           (Self.Data, First_Position, Last_Position, Result.Data);
+      end return;
+   end Trim_Trailing;
+
    -----------
    -- Write --
    -----------
