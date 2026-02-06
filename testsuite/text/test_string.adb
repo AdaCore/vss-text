@@ -28,6 +28,7 @@ procedure Test_String is
    procedure Test_Replace;
    procedure Test_Slice;
    procedure Test_Tail;
+   procedure Test_Trim;
    procedure Test_To_Virtual_String_Vector;
 
    procedure Test_V705_011;
@@ -242,6 +243,12 @@ procedure Test_String is
       Test_Support.Assert (R (1) = S);
    end Test_To_Virtual_String_Vector;
 
+   ---------------
+   -- Test_Trim --
+   ---------------
+
+   procedure Test_Trim is separate;
+
    -------------------
    -- Test_V705_011 --
    -------------------
@@ -286,6 +293,7 @@ procedure Test_String is
       Test_Support.Run_Testcase (Test_Replace'Access, "Replace");
       Test_Support.Run_Testcase (Test_Slice'Access, "Slice");
       Test_Support.Run_Testcase (Test_Tail'Access, "Tail");
+      Test_Support.Run_Testcase (Test_Trim'Access, "Trim");
       Test_Support.Run_Testcase
         (Test_To_Virtual_String_Vector'Access, "To_Virtual_String_Vector");
 
