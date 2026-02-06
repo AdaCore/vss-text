@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2020-2025, AdaCore
+--  Copyright (C) 2020-2026, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -20,6 +20,12 @@ package body VSS.Implementation.UTF8_Strings is
    use type VSS.Implementation.UTF8_Encoding.UTF8_Code_Unit_Array;
    use type VSS.Unicode.Code_Point;
    use type VSS.Unicode.UTF16_Code_Unit_Offset;
+
+   procedure Initialize_Null (Text : out UTF8_String_Data);
+   --  Initialize string data to `null` string.
+
+   procedure Initialize_Empty (Text : out UTF8_String_Data);
+   --  Initialize string data to empty string with SSO.
 
    ------------
    -- Adjust --
@@ -372,6 +378,25 @@ package body VSS.Implementation.UTF8_Strings is
       end loop;
    end Hash;
 
+   ----------------------
+   -- Initialize_Empty --
+   ----------------------
+
+   procedure Initialize_Empty (Text : out UTF8_String_Data) is
+   begin
+      Text := (others => <>);
+      Text.Storage_Address := Text.Manager'Address;
+   end Initialize_Empty;
+
+   ---------------------
+   -- Initialize_Null --
+   ---------------------
+
+   procedure Initialize_Null (Text : out UTF8_String_Data) is
+   begin
+      Text := (others => <>);
+   end Initialize_Null;
+
    --------------
    -- Is_Empty --
    --------------
@@ -580,8 +605,14 @@ package body VSS.Implementation.UTF8_Strings is
       Length       : VSS.Implementation.Strings.Character_Count;
 
    begin
+      if Is_Null (Text) then
+         Initialize_Null (Result);
+
+         return;
+      end if;
+
       if From.Index > To.Index then
-         Result := Default_UTF8_String_Data;
+         Initialize_Empty (Result);
 
          return;
       end if;
