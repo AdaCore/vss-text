@@ -1,14 +1,12 @@
 --
---  Copyright (C) 2024-2025, AdaCore
+--  Copyright (C) 2024-2026, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
 
 pragma Ada_2022;
 
-package body VSS.Implementation.Arithmetic_64
-  with Preelaborate
-is
+package body VSS.Implementation.Arithmetic_64 is
 
    --------------
    -- Multiply --
