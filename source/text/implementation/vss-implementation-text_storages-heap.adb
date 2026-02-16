@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2025, AdaCore
+--  Copyright (C) 2025-2026, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -8,9 +8,7 @@ with Ada.Unchecked_Deallocation;
 with System.Address_To_Access_Conversions;
 with System.Atomic_Counters;
 
-package body VSS.Implementation.Text_Storages.Heap
-  with Preelaborate
-is
+package body VSS.Implementation.Text_Storages.Heap is
 
    Growth_Factor            : constant := 32;
    --  The growth factor controls how much extra space is allocated when

@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2020-2025, AdaCore
+--  Copyright (C) 2020-2026, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -8,9 +8,7 @@ pragma Ada_2022;
 
 with VSS.Implementation.Text_Storages.Heap;
 
-package body VSS.Implementation.UTF8_Strings.Mutable_Operations
-  with Preelaborate
-is
+package body VSS.Implementation.UTF8_Strings.Mutable_Operations is
 
    use type VSS.Implementation.Strings.Character_Offset;
    use type VSS.Unicode.UTF16_Code_Unit_Offset;
