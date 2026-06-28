@@ -177,8 +177,7 @@ package VSS.String_Vectors is
 
    --  Syntax sugar for Ada 2022 aggregates
 
-   function Empty_Syntax_Sugar return Virtual_String_Vector is
-     (Empty_Virtual_String_Vector);
+   function Empty_Syntax_Sugar return Virtual_String_Vector;
    --  Return an empty string vector
 
    procedure Append_Syntax_Sugar
@@ -206,6 +205,9 @@ private
 
    Empty_Virtual_String_Vector : constant Virtual_String_Vector :=
      (Ada.Finalization.Controlled with others => <>);
+
+   function Empty_Syntax_Sugar return Virtual_String_Vector is
+     (Empty_Virtual_String_Vector);
 
    type Reversible_Iterator is
      limited new Iterator_Interfaces.Reversible_Iterator with
