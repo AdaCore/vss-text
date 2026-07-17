@@ -8,7 +8,6 @@
 
 with "../config/vss_text_config";
 with "vss_common";
-with "vss_gnat";
 
 library project VSS_Text is
 

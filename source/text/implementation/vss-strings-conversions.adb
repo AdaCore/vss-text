@@ -1,5 +1,5 @@
 --
---  Copyright (C) 2020-2025, AdaCore
+--  Copyright (C) 2020-2026, AdaCore
 --
 --  SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 --
@@ -7,7 +7,6 @@
 pragma Warnings (Off, ".* is an internal GNAT unit");
 with Ada.Strings.Unbounded.Aux;
 with Ada.Strings.Wide_Wide_Unbounded.Aux;
-with Ada.Strings.Wide_Wide_Unbounded.VSS_Aux;
 pragma Warnings (On, ".* is an internal GNAT unit");
 
 with VSS.Implementation.Strings;
@@ -276,7 +275,7 @@ package body VSS.Strings.Conversions is
         Ada.Strings.Wide_Wide_Unbounded.Unbounded_Wide_Wide_String
       do
          if not Item.Is_Empty then
-            Ada.Strings.Wide_Wide_Unbounded.VSS_Aux.Set_String
+            Ada.Strings.Wide_Wide_Unbounded.Aux.Set_Wide_Wide_String
               (Result, Integer (Item.Character_Length), Set'Access);
          end if;
       end return;

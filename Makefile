@@ -83,13 +83,11 @@ check: coverage-instrument-validation_static build-tests check_text coverage-rep
 endif
 
 build-libs-%:
-	gprbuild $(GPRBUILD_FLAGS) gnat/vss_gnat.gpr
 	gprbuild $(GPRBUILD_FLAGS) gnat/vss_text.gpr
 
 install: install-libs-development_relocatable
 
 install-libs-%:
-	gprinstall $(GPRINSTALL_FLAGS)/gnat -f -p -P gnat/vss_gnat.gpr --install-name=vss_gnat
 	gprinstall $(GPRINSTALL_FLAGS)/text -f -p -P gnat/vss_text.gpr --install-name=vss_text
 
 generate: generate-development_static
